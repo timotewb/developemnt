@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os/exec"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,8 +22,16 @@ func respond(c *gin.Context) {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
+	fmt.Println(filepath.Join("apps", body.Name))
+	cmd := exec.Command(filepath.Join("apps", body.Name))
+	stdout, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 	// return the body as a response to call
-	c.JSON(http.StatusAccepted, &body)
+	c.JSON(http.StatusAccepted, string(stdout))
 }
 
 func main() {
