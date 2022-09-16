@@ -3,20 +3,29 @@ package main
 import (
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/storage"
-	databricks "github.com/pulumi/pulumi-databricks/sdk/go/databricks"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		conf := config.New(ctx, "")
+		subscriptionId := conf.Require("subscriptionId")
+		location := conf.Require("location")
+
 		// Create an Azure Resource Group
-		resourceGroup, err := resources.NewResourceGroup(ctx, "pulumi-rg", nil)
+		resourceGroup, err := resources.NewResourceGroup(ctx, "pulumi-rg", &resources.ResourceGroupArgs{
+			Location:          pulumi.String(location),
+			ResourceGroupName: pulumi.String("pulumi-rg"),
+			ManagedBy:         pulumi.String(subscriptionId),
+		})
 		if err != nil {
 			return err
 		}
 
 		// Create an Azure resource (Storage Account)
 		account, err := storage.NewStorageAccount(ctx, "pulumi0sa", &storage.StorageAccountArgs{
+			Location:          pulumi.String(location),
 			ResourceGroupName: resourceGroup.Name,
 			Sku: &storage.SkuArgs{
 				Name: pulumi.String("Standard_LRS"),
@@ -43,14 +52,17 @@ func main() {
 				return accountKeys.Keys[0].Value, nil
 			},
 		))
+		ctx.Export("pulumiRGID", pulumi.All(resourceGroup.ID().ToStringOutput()).ApplyT(
+			func(args []interface{}) (string, error) {
+				resourceID := args[0].(string)
+				if err != nil {
+					return "", err
+				}
 
-		// create databricks
-		group, err := databricks.NewGroup(ctx, "pulumi-databricks-group", &databricks.GroupArgs{
-			DisplayName: pulumi.String("my company group"),
-		})
-		if err != nil {
-			return err
-		}
+				return resourceID, nil
+			},
+		))
+
 		return nil
 	})
 }
