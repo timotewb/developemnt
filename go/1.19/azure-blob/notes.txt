@@ -1,0 +1,40 @@
+https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-go
+
+# install package with
+go get -u github.com/Azure/azure-sdk-for-go/sdk/storage/azblob
+
+# get sample
+git clone https://github.com/Azure-Samples/storage-blobs-go-quickstart
+
+
+# assign RBAC
+az role assignment create --assignee "5ac00e7f-bf13-4922-b56a-f4687a8a5988" --role "Storage Blob Data Contributor" --scope "/subscriptions/af272ccb-a7af-4d0e-a513-d3f64afc02b1/resourceGroups/cpu-blob-rg/providers/Microsoft.Storage/storageAccounts/cpu0blob0test"
+
+
+
+# authenticating
+https://docs.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication?tabs=bash
+
+export AZURE_TENANT_ID="c0341060-11ba-4e09-a49e-b2074cc0a379"
+export AZURE_CLIENT_ID="3a0b854c-cb17-475d-9738-0cae73cb408c"
+export AZURE_CLIENT_SECRET="pRJ8Q~YhMzTksqUNfKRX0MfLDV19beA.__~y9avm"
+
+export AZURE_SUBSCRIPTION_ID="af272ccb-a7af-4d0e-a513-d3f64afc02b1"
+
+
+export AZURE_CLIENT_ID="b7a51402-c83b-4c37-b814-b15a65a01c77"
+export AZURE_CLIENT_ID="b614fb9e-e3f4-4194-8f9e-40cb39d8d9c6"
+
+
+
+az ad sp create-for-rbac --name test-blob-sp --role Contributor --scope "/subscriptions/af272ccb-a7af-4d0e-a513-d3f64afc02b1/resourceGroups/cpu-blob-rg"
+{
+  "appId": "8b864627-dca9-4fdd-b92e-86404af966de",
+  "displayName": "test-blob-sp",
+  "password": "t-VFz.Q6YX~fWfRIlCE9b87fv7~KK09n_V",
+  "tenant": "c0341060-11ba-4e09-a49e-b2074cc0a379"
+}
+
+export AZURE_TENANT_ID="c0341060-11ba-4e09-a49e-b2074cc0a379"
+export AZURE_CLIENT_ID="8b864627-dca9-4fdd-b92e-86404af966de"
+export AZURE_CLIENT_SECRET="t-VFz.Q6YX~fWfRIlCE9b87fv7~KK09n_V"
