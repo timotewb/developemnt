@@ -38,3 +38,5 @@ az ad sp create-for-rbac --name test-blob-sp --role Contributor --scope "/subscr
 export AZURE_TENANT_ID="c0341060-11ba-4e09-a49e-b2074cc0a379"
 export AZURE_CLIENT_ID="8b864627-dca9-4fdd-b92e-86404af966de"
 export AZURE_CLIENT_SECRET="t-VFz.Q6YX~fWfRIlCE9b87fv7~KK09n_V"
+
+https://learn.microsoft.com/en-us/azure/developer/go/azure-sdk-authentication-service-principal?tabs=azure-cli#authenticate-with-a-secret
