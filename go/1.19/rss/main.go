@@ -9,11 +9,26 @@ import (
 )
 
 type DataFormat struct {
-	Rss struct {
-		Channel struct {
-			Title string `xml:title json:title`
-		} `xml:channel json:channel`
-	} `xml:rss json:rss`
+	XMLName xml.Name `xml:"rss"`
+	Rss     Channel  `xml:"channel"`
+}
+type Channel struct {
+	XMLName xml.Name `xml:"channel"`
+	Items   []Item   `xml:"item"`
+}
+type Item struct {
+	XMLName     xml.Name     `xml:"item"`
+	Title       string       `xml:"title"`
+	Link        string       `xml:"link"`
+	Description string       `xml:"description"`
+	Creator     string       `xml:"creator"`
+	PubDate     string       `xml:"pubDate"`
+	ImageURL    ImageURLAttr `xml:"content"`
+	ImageCredit string       `xml:"credit"`
+}
+type ImageURLAttr struct {
+	XMLName xml.Name `xml:"content"`
+	Url     string   `xml:"url,attr"`
 }
 
 // tweaked from: https://stackoverflow.com/a/42718113/1170664
@@ -40,12 +55,12 @@ func main() {
 	if xmlBytes, err := getXML("https://rss.nytimes.com/services/xml/rss/nyt/World.xml"); err != nil {
 		log.Printf("Failed to get XML: %v", err)
 	} else {
-		fmt.Print(string(xmlBytes))
+		//fmt.Print(string(xmlBytes))
 		var result DataFormat
 		xml.Unmarshal(xmlBytes, &result)
 		if err := xml.Unmarshal(xmlBytes, &result); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Print(result.Rss.Channel.Title)
+		fmt.Print(result.Rss.Items)
 	}
 }
