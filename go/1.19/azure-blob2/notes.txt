@@ -1,0 +1,6 @@
+01. write code
+02. setup infrastructure
+    - create resource group
+    - create storage account
+    - in AD create an app and add API permissions for storageaccount
+    - from resource group, access controls, assign app(service principal) as Storage Blob Data Contributor
