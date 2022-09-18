@@ -1,1 +1,3 @@
 ~/.surrealdb/surreal start --log debug --user root --pass root file:///home/timotewb/development/SurrealDB
+
+~/.surrealdb/surreal start --log debug --user root --pass root file:///home/timotewb/db/SurrealDB
