@@ -1,3 +1,5 @@
 config:
   getting-started-again:location: australiaeast
   getting-started-again:subscriptionId: 5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a
+  azure-native:location: australiaeast
+  azure-native:subscriptionId: 5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a

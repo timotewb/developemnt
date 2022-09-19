@@ -33,6 +33,24 @@ func main() {
 			return err
 		}
 
+		// create databricks workspace
+		// resourceGroupDBr, err := resources.NewResourceGroup(ctx, "pulumi-rgdbr", &resources.ResourceGroupArgs{
+		// 	Location:          pulumi.String(location),
+		// 	ResourceGroupName: pulumi.String("pulumi-rgdbr"),
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+		// databricks.NewWorkspace(ctx, "pulumi-dbr", &databricks.WorkspaceArgs{
+		// 	Location:               pulumi.String(location),
+		// 	ManagedResourceGroupId: resourceGroupDBr.ID().ToStringOutput(),
+		// 	ResourceGroupName:      resourceGroup.Name,
+		// 	WorkspaceName:          pulumi.String("pulumi-dbrws"),
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+
 		// Export the primary key of the Storage Account
 		ctx.Export("primaryStorageKey", pulumi.All(resourceGroup.Name, account.Name).ApplyT(
 			func(args []interface{}) (string, error) {
