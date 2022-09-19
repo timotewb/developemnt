@@ -1,0 +1,3 @@
+name: getting-started-again
+description: A minimal Azure Native Go Pulumi program
+runtime: go

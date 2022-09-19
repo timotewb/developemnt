@@ -1,0 +1,6 @@
+
+az login
+ az account set --subscription=5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a
+pulumi new azure-go
+pulumi config set <project name>:location
+pulumi config set <project name>:subscriptionID

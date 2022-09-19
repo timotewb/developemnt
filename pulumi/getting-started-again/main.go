@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/storage"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -12,11 +10,7 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		conf := config.New(ctx, "")
-		subId := conf.Require("subscriptionId")
 		location := conf.Require("location")
-
-		fmt.Println("subId:", subId)
-		fmt.Println("location:", location)
 
 		// Create an Azure Resource Group
 		resourceGroup, err := resources.NewResourceGroup(ctx, "pulumi-rg", &resources.ResourceGroupArgs{
@@ -29,7 +23,6 @@ func main() {
 
 		// Create an Azure resource (Storage Account)
 		account, err := storage.NewStorageAccount(ctx, "pulumi0sa", &storage.StorageAccountArgs{
-			Location:          pulumi.String(location),
 			ResourceGroupName: resourceGroup.Name,
 			Sku: &storage.SkuArgs{
 				Name: pulumi.String("Standard_LRS"),
@@ -54,16 +47,6 @@ func main() {
 				}
 
 				return accountKeys.Keys[0].Value, nil
-			},
-		))
-		ctx.Export("pulumiRGID", pulumi.All(resourceGroup.ID().ToStringOutput()).ApplyT(
-			func(args []interface{}) (string, error) {
-				resourceID := args[0].(string)
-				if err != nil {
-					return "", err
-				}
-
-				return resourceID, nil
 			},
 		))
 
