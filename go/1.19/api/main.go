@@ -36,6 +36,6 @@ func respond(c *gin.Context) {
 
 func main() {
 	engine := gin.New()
-	engine.POST("/test", respond)
+	engine.GET("/test", respond)
 	engine.Run(":3000")
 }
