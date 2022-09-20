@@ -47,10 +47,10 @@ func main() {
 
 		// create role assignment on managed identity
 		ra, err := authorization.NewRoleAssignment(ctx, "ra", &authorization.RoleAssignmentArgs{
-			PrincipalId:        pulumi.String("d9327919-6775-4843-9037-3fb0fb0473cb"), //databricks resource provider appID
+			PrincipalId:        pulumi.String("64765f4d-06b5-4f56-8cc4-1c068f624992"), //databricks resource provider objID
 			PrincipalType:      pulumi.String("ServicePrincipal"),                     // type
 			RoleAssignmentName: pulumi.String("5a53e7cc-3e62-4357-a85d-6ac4af0d6c18"), //midbr clientID
-			RoleDefinitionId:   pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourcegroups/pulumi-rgdbr/providers/Microsoft.ManagedIdentity/userAssignedIdentities/pulumi-midbr"),
+			RoleDefinitionId:   pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"),
 			Scope:              rgdbr.ID().ToStringOutput(),
 		})
 		if err != nil {
