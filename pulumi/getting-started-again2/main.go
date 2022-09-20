@@ -59,53 +59,54 @@ func main() {
 		}
 
 		// create network security group
-		// nsdbr, err := network.NewNetworkSecurityGroup(ctx, "pulumi-sgdbr", &network.NetworkSecurityGroupArgs{
-		// 	Location:                 pulumi.String(location),
-		// 	NetworkSecurityGroupName: pulumi.String("pulumi-sgdbr"),
-		// 	ResourceGroupName:        rgdbr.Name,
-		// 	SecurityRules: []network.SecurityRuleTypeArgs{
-		// 		&network.SecurityRuleTypeArgs{
-		// 			Access:                   pulumi.String("Allow"),
-		// 			Direction:                pulumi.String("Inbound"),
-		// 			Protocol:                 pulumi.String("*"),
-		// 			Description:              pulumi.String("Required for Databricks control plane management of worker nodes."),
-		// 			DestinationAddressPrefix: pulumi.String("*"),
-		// 			DestinationPortRange:     pulumi.String("22"),
-		// 			Name:                     pulumi.String("databricks-control-plane-ssh"),
-		// 			Priority:                 pulumi.Int(100),
-		// 			SourceAddressPrefix:      pulumi.String("20.37.156.208/32,23.101.152.95/32"),
-		// 			SourcePortRange:          pulumi.String("*"),
-		// 		},
-		// 	},
-		// })
-		nsdbr, err := network.NewNetworkSecurityGroup(ctx, "networkSecurityGroup", &network.NetworkSecurityGroupArgs{
-			Location:                 pulumi.String("eastus"),
-			NetworkSecurityGroupName: pulumi.String("testnsg"),
-			ResourceGroupName:        pulumi.String("rg1"),
+		nsdbr, err := network.NewNetworkSecurityGroup(ctx, "pulumi-sgdbr", &network.NetworkSecurityGroupArgs{
+			Location:                 pulumi.String(location),
+			NetworkSecurityGroupName: pulumi.String("pulumi-sgdbr"),
+			ResourceGroupName:        rgdbr.Name,
 			SecurityRules: []network.SecurityRuleTypeArgs{
-				&network.SecurityRuleTypeArgs{
+				network.SecurityRuleTypeArgs{
 					Access:                   pulumi.String("Allow"),
-					DestinationAddressPrefix: pulumi.String("*"),
-					DestinationPortRange:     pulumi.String("80"),
 					Direction:                pulumi.String("Inbound"),
-					Name:                     pulumi.String("rule1"),
-					Priority:                 pulumi.Int(130),
 					Protocol:                 pulumi.String("*"),
-					SourceAddressPrefix:      pulumi.String("*"),
-					SourcePortRange:          pulumi.String("*"),
-				},
-				&network.SecurityRuleTypeArgs{
-					Access:                   pulumi.String("Allow"),
+					Description:              pulumi.String("Required for Databricks control plane management of worker nodes."),
 					DestinationAddressPrefix: pulumi.String("*"),
-					DestinationPortRange:     pulumi.String("90"),
-					Direction:                pulumi.String("Inbound"),
-					Name:                     pulumi.String("rule2"),
-					Priority:                 pulumi.Int(130),
-					Protocol:                 pulumi.String("*"),
-					SourceAddressPrefix:      pulumi.String("*"),
+					DestinationPortRange:     pulumi.String("22"),
+					Name:                     pulumi.String("databricks-control-plane-ssh"),
+					Priority:                 pulumi.Int(100),
+					SourceAddressPrefix:      pulumi.String("20.37.156.208/32,23.101.152.95/32"),
 					SourcePortRange:          pulumi.String("*"),
 				}},
 		})
+
+		// n1 := network.SecurityRuleTypeArgs{
+		// 	Access:                   pulumi.String("Allow"),
+		// 	Direction:                pulumi.String("Inbound"),
+		// 	Protocol:                 pulumi.String("*"),
+		// 	Description:              pulumi.String("Required for Databricks control plane management of worker nodes."),
+		// 	DestinationAddressPrefix: pulumi.String("*"),
+		// 	DestinationPortRange:     pulumi.String("22"),
+		// 	Name:                     pulumi.String("databricks-control-plane-ssh"),
+		// 	Priority:                 pulumi.Int(100),
+		// 	SourceAddressPrefix:      pulumi.String("20.37.156.208/32,23.101.152.95/32"),
+		// 	SourcePortRange:          pulumi.String("*"),
+		// }
+		// n2 := network.SecurityRuleTypeArgs{
+		// 	Access:                   pulumi.String("No"),
+		// 	Direction:                pulumi.String("Inbound"),
+		// 	Protocol:                 pulumi.String("*"),
+		// 	Description:              pulumi.String("Required for Databricks control plane management of worker nodes."),
+		// 	DestinationAddressPrefix: pulumi.String("*"),
+		// 	DestinationPortRange:     pulumi.String("22"),
+		// 	Name:                     pulumi.String("databricks-control-plane-ssh"),
+		// 	Priority:                 pulumi.Int(100),
+		// 	SourceAddressPrefix:      pulumi.String("20.37.156.208/32,23.101.152.95/32"),
+		// 	SourcePortRange:          pulumi.String("*"),
+		// }
+
+		// o3 := []network.SecurityRuleTypeArgs{}
+		// o3 = append(o3, n1)
+		// o3 = append(o3, n2)
+
 		if err != nil {
 			return err
 		}
@@ -114,7 +115,10 @@ func main() {
 		fmt.Println(rgdbr.Name)
 		fmt.Println(midbr.Name)
 		fmt.Println(ra.Name)
-		fmt.Println(nsdbr.Name)
+		// fmt.Printf("type is %T\n", n1)
+		// fmt.Printf("type is %T\n", n2)
+		// fmt.Printf("type is %T\n", o3)
+		// fmt.Println(o3[0].Access)
 		return nil
 	})
 }
