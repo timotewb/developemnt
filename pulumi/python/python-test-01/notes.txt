@@ -1,0 +1,2 @@
+
+pulumi config set azure-native:location eastus

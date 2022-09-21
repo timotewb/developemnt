@@ -1,0 +1,3 @@
+name: p01-go-start-again
+description: A minimal Azure Native Go Pulumi program
+runtime: go

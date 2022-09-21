@@ -1,0 +1,3 @@
+config:
+  azure-native:location: australiaeast
+  p02-go-dbr:location: australiaeast
