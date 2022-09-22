@@ -99,6 +99,7 @@ func main() {
 		// 	Location:               pulumi.String(location),
 		// 	ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
 		// 	Parameters: &databricks.WorkspaceCustomParametersArgs{
+<<<<<<< Updated upstream
 		// 		CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
 		// 			Value: vndbr.ID().ToStringOutput(),
 		// 		},
@@ -107,6 +108,16 @@ func main() {
 		// 		},
 		// 		CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
 		// 			Value: pulumi.String("public-subnet-t"),
+=======
+		// 		CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+		// 			Value: pulumi.String("private-subnet"),
+		// 		},
+		// 		CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+		// 			Value: pulumi.String("public-subnet"),
+		// 		},
+		// 		CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+		// 			Value: vndbr.ID().ToStringOutput(),
+>>>>>>> Stashed changes
 		// 		},
 		// 	},
 		// 	ResourceGroupName: rg.Name,
