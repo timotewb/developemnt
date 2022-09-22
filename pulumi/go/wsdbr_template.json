@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaces_wsdbr_test_name": {
+            "defaultValue": "wsdbr-test",
+            "type": "String"
+        },
+        "virtualNetworks_pulumi_vndbr_externalid": {
+            "defaultValue": "/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr/providers/Microsoft.Network/virtualNetworks/pulumi-vndbr",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Databricks/workspaces",
+            "apiVersion": "2022-04-01-preview",
+            "name": "[parameters('workspaces_wsdbr_test_name')]",
+            "location": "australiaeast",
+            "sku": {
+                "name": "premium"
+            },
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "requiredNsgRules": "AllRules",
+                "managedResourceGroupId": "[concat('/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/databricks-rg-', parameters('workspaces_wsdbr_test_name'), '-ylhv4vccjwyve')]",
+                "parameters": {
+                    "customPrivateSubnetName": {
+                        "type": "String",
+                        "value": "private-subnet-t"
+                    },
+                    "customPublicSubnetName": {
+                        "type": "String",
+                        "value": "public-subnet-t"
+                    },
+                    "customVirtualNetworkId": {
+                        "type": "String",
+                        "value": "[parameters('virtualNetworks_pulumi_vndbr_externalid')]"
+                    },
+                    "enableNoPublicIp": {
+                        "type": "Bool",
+                        "value": false
+                    },
+                    "natGatewayName": {
+                        "type": "String",
+                        "value": "nat-gateway"
+                    },
+                    "prepareEncryption": {
+                        "type": "Bool",
+                        "value": false
+                    },
+                    "publicIpName": {
+                        "type": "String",
+                        "value": "nat-gw-public-ip"
+                    },
+                    "requireInfrastructureEncryption": {
+                        "type": "Bool",
+                        "value": false
+                    },
+                    "storageAccountName": {
+                        "type": "String",
+                        "value": "dbstorageolpdi77j62cjm"
+                    },
+                    "storageAccountSkuName": {
+                        "type": "String",
+                        "value": "Standard_GRS"
+                    },
+                    "vnetAddressPrefix": {
+                        "type": "String",
+                        "value": "10.139"
+                    }
+                },
+                "authorizations": [
+                    {
+                        "principalId": "9a74af6f-d153-4348-988a-e2672920bee9",
+                        "roleDefinitionId": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                    }
+                ],
+                "createdBy": {},
+                "updatedBy": {},
+                "createdDateTime": "2022-09-22T00:24:50.9273264Z"
+            }
+        }
+    ]
+}
