@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	authorization "github.com/pulumi/pulumi-azure-native/sdk/go/azure/authorization"
+	databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/network"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -134,6 +135,9 @@ func main() {
 				"databricks-environment": pulumi.String("true"),
 			},
 		})
+		if err != nil {
+			return err
+		}
 
 		// Create virtual network
 		vn, err := network.NewVirtualNetwork(ctx, "pulumi-vn", &network.VirtualNetworkArgs{
@@ -166,12 +170,36 @@ func main() {
 
 		// add delegations to databricks
 
-		//
+		// create databricks workspace
+		dbrws, err := databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
+			Location: pulumi.String(location),
+			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+			Parameters: &databricks.WorkspaceCustomParametersArgs{
+				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: vn.ID(),
+				},
+				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("private-subnet"),
+				},
+				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("public-subnet"),
+				},
+				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameter{
+					Value: true,
+				},
+			},
+			ResourceGroupName: rg.Name,
+			WorkspaceName:     pulumi.String("pulumi-dbrws"),
+		})
+		if err != nil {
+			return err
+		}
 
-		fmt.Println(rg.Name.ToStringOutput())
 		fmt.Println(ra.Name.ToStringOutput())
-		fmt.Println(sg)
-		fmt.Println(vn)
+		fmt.Println(sg.ID())
+		fmt.Println(vn.ID())
+		fmt.Println(dbrws.Name.ToStringOutput())
 
 		return nil
 	})
