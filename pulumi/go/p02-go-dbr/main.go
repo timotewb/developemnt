@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	authorization "github.com/pulumi/pulumi-azure-native/sdk/go/azure/authorization"
-	// databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
+	databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
 	managedidentity "github.com/pulumi/pulumi-azure-native/sdk/go/azure/managedidentity"
 	network "github.com/pulumi/pulumi-azure-native/sdk/go/azure/network"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
@@ -95,28 +95,29 @@ func main() {
 		}
 
 		// create databricks workspace
-		// not you cannot run the below without the subnets created!
-		// wsdbr, err := databricks.NewWorkspace(ctx, "pulumi-wsdbr", &databricks.WorkspaceArgs{
-		// 	Location: pulumi.String(location),
-		// 	// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
-		// 	ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
-		// 	Parameters: &databricks.WorkspaceCustomParametersArgs{
-		// 		CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: vndbr.ID(),
-		// 		},
-		// 		CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: pulumi.String("private-subnet"),
-		// 		},
-		// 		CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: pulumi.String("public-subnet"),
-		// 		},
-		// 	},
-		// 	ResourceGroupName: rg.Name,
-		// 	WorkspaceName:     pulumi.String("pulumi-wsdbr"),
-		// })
-		// if err != nil {
-		// 	return err
-		// }
+		// note you cannot run the below without the subnets created!
+		// note you cannot run the below without the sg rules applied `sgdbr_template.json`
+		wsdbr, err := databricks.NewWorkspace(ctx, "pulumi-wsdbr", &databricks.WorkspaceArgs{
+			Location: pulumi.String(location),
+			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+			Parameters: &databricks.WorkspaceCustomParametersArgs{
+				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: vndbr.ID(),
+				},
+				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("private-subnet"),
+				},
+				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("public-subnet"),
+				},
+			},
+			ResourceGroupName: rg.Name,
+			WorkspaceName:     pulumi.String("pulumi-wsdbr"),
+		})
+		if err != nil {
+			return err
+		}
 
 		fmt.Println(rg.Name)
 		fmt.Println(rgdbr.Name)
@@ -124,7 +125,7 @@ func main() {
 		fmt.Println(radbr.Name)
 		fmt.Println(sgdbr.Name)
 		fmt.Println(vndbr.Name)
-		// fmt.Println(wsdbr.Name)
+		fmt.Println(wsdbr.Name)
 
 		return nil
 	})

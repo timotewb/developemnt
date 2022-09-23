@@ -1,0 +1,273 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkSecurityGroups_pulumi_sgdbr_name": {
+            "defaultValue": "pulumi-sgdbr",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkSecurityGroups_pulumi_sgdbr_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "applicaiton": "databricks",
+                "databricks-environment": "true"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-worker-inbound",
+                        "properties": {
+                            "description": "Required for worker nodes communication within a cluster.",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-databricks-webapp",
+                        "properties": {
+                            "description": "Required for workers communication with Databricks Webapp.",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "AzureDatabricks",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-sql",
+                        "properties": {
+                            "description": "Required for workers communication with Azure SQL services.",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3306",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "Sql",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-storage",
+                        "properties": {
+                            "description": "Required for workers communication with Azure Storage services.",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "443",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "Storage",
+                            "access": "Allow",
+                            "priority": 102,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-worker-outbound",
+                        "properties": {
+                            "description": "Required for worker nodes communication within a cluster.",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 103,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-eventhub",
+                        "properties": {
+                            "description": "Required for worker communication with Azure Eventhub services.",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8080",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "EventHub",
+                            "access": "Allow",
+                            "priority": 104,
+                            "direction": "Outbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-databricks-webapp')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for workers communication with Databricks Webapp.",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "AzureDatabricks",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Outbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-eventhub')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for worker communication with Azure Eventhub services.",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "8080",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "EventHub",
+                "access": "Allow",
+                "priority": 104,
+                "direction": "Outbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-sql')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for workers communication with Azure SQL services.",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3306",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "Sql",
+                "access": "Allow",
+                "priority": 101,
+                "direction": "Outbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-storage')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for workers communication with Azure Storage services.",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "Storage",
+                "access": "Allow",
+                "priority": 102,
+                "direction": "Outbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-worker-inbound')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for worker nodes communication within a cluster.",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_pulumi_sgdbr_name'), '/Microsoft.Databricks-workspaces_UseOnly_databricks-worker-to-worker-outbound')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_pulumi_sgdbr_name'))]"
+            ],
+            "properties": {
+                "description": "Required for worker nodes communication within a cluster.",
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "VirtualNetwork",
+                "destinationAddressPrefix": "VirtualNetwork",
+                "access": "Allow",
+                "priority": 103,
+                "direction": "Outbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        }
+    ]
+}
