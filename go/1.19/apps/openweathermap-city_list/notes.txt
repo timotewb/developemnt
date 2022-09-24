@@ -1,0 +1,144 @@
+
+package main
+
+import (
+	"compress/gzip"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"strings"
+)
+
+func main() {
+	specUrl := "http://bulk.openweathermap.org/sample/city.list.json.gz"
+	resp, err := http.Get(specUrl)
+	if err != nil {
+		fmt.Printf("err: %s", err)
+	}
+
+	defer resp.Body.Close()
+	fmt.Println("status", resp.Status)
+	if resp.StatusCode != 200 {
+		return
+	}
+
+	// Create the file
+	out, err := os.Create("city.list.json.gz")
+	if err != nil {
+		fmt.Printf("err: %s\n", err)
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	fmt.Printf("io.Copy: %s\n", err)
+
+	filename := "city.list.json.gz"
+
+	if filename == "" {
+		fmt.Println("Usage : gunzip sourcefile.gz")
+		os.Exit(1)
+	}
+
+	gzipfile, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("os.Open", err)
+		os.Exit(1)
+	}
+
+	reader, err := gzip.NewReader(gzipfile)
+	if err != nil {
+		fmt.Println("gzip.NewReader", err)
+		os.Exit(1)
+	}
+	defer reader.Close()
+
+	newfilename := strings.TrimSuffix(filename, ".gz")
+
+	writer, err := os.Create(newfilename)
+
+	if err != nil {
+		fmt.Println("os.Create", err)
+		os.Exit(1)
+	}
+
+	defer writer.Close()
+
+	if _, err = io.Copy(writer, reader); err != nil {
+		fmt.Println("io.Copy", err)
+		os.Exit(1)
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package main
+
+import (
+	"compress/gzip"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"os"
+)
+
+func main() {
+	resp, err := http.Get("http://bulk.openweathermap.org/sample/city.list.json.gz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("status", resp.Status)
+	if resp.StatusCode != 200 {
+		return
+	}
+
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		fmt.Println("gzip.NewReader", err)
+		os.Exit(1)
+	}
+	defer reader.Close()
+
+	buff := make([]byte, 2048)
+	for {
+		n, err := reader.Read(buff)
+
+		if err != nil && err != io.EOF {
+			panic(err)
+		}
+
+		if n == 0 {
+			break
+		}
+	}
+
+	s := fmt.Sprintf("%s", buff)
+	fmt.Println(s)
+}
