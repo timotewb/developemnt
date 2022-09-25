@@ -16,7 +16,6 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	fmt.Println("status", resp.Status)
 	if resp.StatusCode != 200 {
 		return
 	}
@@ -30,6 +29,8 @@ func main() {
 	body, err = io.ReadAll(reader)
 	reader.Close()
 
-	fmt.Printf(string(body))
+	// out := string(body)
+	// fmt.Print(out[1 : len(out)-1])
+	fmt.Print(string(body))
 
 }

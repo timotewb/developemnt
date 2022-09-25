@@ -16,9 +16,11 @@ type Body struct {
 }
 
 func respond(c *gin.Context) {
+	fmt.Println(c.Request.Body)
 	body := Body{}
 	// using BindJson method to serialize body with struct
 	if err := c.BindJSON(&body); err != nil {
+		fmt.Println("Error: c.BindJSON()")
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -27,15 +29,16 @@ func respond(c *gin.Context) {
 	stdout, err := cmd.Output()
 
 	if err != nil {
+		fmt.Println("cmd.Output()")
 		fmt.Println(err.Error())
 		return
 	}
 	// return the body as a response to call
-	c.JSON(http.StatusAccepted, string(stdout))
+	c.Data(http.StatusOK, "application/json", stdout)
 }
 
 func main() {
-	engine := gin.New()
-	engine.GET("/test", respond)
+	engine := gin.Default()
+	engine.POST("/test", respond)
 	engine.Run(":3000")
 }
