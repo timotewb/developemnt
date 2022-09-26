@@ -1,4 +1,8 @@
 
+go build -o /home/timotewb/development/go/1.19/api/apps
+
+
+
 package main
 
 import (

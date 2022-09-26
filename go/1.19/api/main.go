@@ -16,7 +16,7 @@ type Body struct {
 }
 
 func respond(c *gin.Context) {
-	fmt.Println(c.Request.Body)
+
 	body := Body{}
 	// using BindJson method to serialize body with struct
 	if err := c.BindJSON(&body); err != nil {
@@ -26,10 +26,11 @@ func respond(c *gin.Context) {
 	}
 	fmt.Println(filepath.Join("apps", body.Name))
 	cmd := exec.Command(filepath.Join("apps", body.Name))
-	stdout, err := cmd.Output()
 
+	stdout, err := cmd.Output()
 	if err != nil {
-		fmt.Println("cmd.Output()")
+		fmt.Println("Error: cmd.Output()")
+		fmt.Println("Error:", string(stdout))
 		fmt.Println(err.Error())
 		return
 	}

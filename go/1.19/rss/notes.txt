@@ -1,1 +1,10 @@
 https://marduc812.com/2020/12/17/complete-xml-parsing-guide-with-golang/
+
+
+insert into openweather_city_list (
+select 
+    <int> id as id,
+    *
+from 
+    http::post('http://localhost:3000/test',{'name':'openweathermap-city_list'})
+);
