@@ -5,8 +5,10 @@ import (
 
 	authorization "github.com/pulumi/pulumi-azure-native/sdk/go/azure/authorization"
 	databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
+	keyvault "github.com/pulumi/pulumi-azure-native/sdk/go/azure/keyvault"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/network"
+	"github.com/pulumi/pulumi-azuread/sdk/v5/go/azuread"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -15,6 +17,12 @@ func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		conf := config.New(ctx, "")
 		location := conf.Require("location")
+
+		// get client config
+		cConf, err := azuread.GetClientConfig(ctx, nil, nil)
+		if err != nil {
+			return err
+		}
 
 		// Create an Azure Resource Group
 		rg, err := resources.NewResourceGroup(ctx, "pulumi-rg", &resources.ResourceGroupArgs{
@@ -168,6 +176,120 @@ func main() {
 			return err
 		}
 
+		// create keyvaule
+		kv, err := keyvault.NewVault(ctx, "pulumi-kv-nv", &keyvault.VaultArgs{
+			Location: pulumi.String(location),
+			Properties: &keyvault.VaultPropertiesArgs{
+				AccessPolicies: keyvault.AccessPolicyEntryArray{
+					&keyvault.AccessPolicyEntryArgs{
+						ObjectId: pulumi.String(cConf.ObjectId),
+						Permissions: &keyvault.PermissionsArgs{
+							Certificates: pulumi.StringArray{
+								pulumi.String("get"),
+								pulumi.String("list"),
+								pulumi.String("delete"),
+								pulumi.String("create"),
+								pulumi.String("import"),
+								pulumi.String("update"),
+								pulumi.String("managecontacts"),
+								pulumi.String("getissuers"),
+								pulumi.String("listissuers"),
+								pulumi.String("setissuers"),
+								pulumi.String("deleteissuers"),
+								pulumi.String("manageissuers"),
+								pulumi.String("recover"),
+								pulumi.String("purge"),
+							},
+							Keys: pulumi.StringArray{
+								pulumi.String("encrypt"),
+								pulumi.String("decrypt"),
+								pulumi.String("wrapKey"),
+								pulumi.String("unwrapKey"),
+								pulumi.String("sign"),
+								pulumi.String("verify"),
+								pulumi.String("get"),
+								pulumi.String("list"),
+								pulumi.String("create"),
+								pulumi.String("update"),
+								pulumi.String("import"),
+								pulumi.String("delete"),
+								pulumi.String("backup"),
+								pulumi.String("restore"),
+								pulumi.String("recover"),
+								pulumi.String("purge"),
+							},
+							Secrets: pulumi.StringArray{
+								pulumi.String("get"),
+								pulumi.String("list"),
+								pulumi.String("set"),
+								pulumi.String("delete"),
+								pulumi.String("backup"),
+								pulumi.String("restore"),
+								pulumi.String("recover"),
+								pulumi.String("purge"),
+							},
+						},
+						TenantId: pulumi.String(cConf.TenantId),
+					},
+				},
+				EnabledForDeployment:         pulumi.Bool(true),
+				EnabledForDiskEncryption:     pulumi.Bool(true),
+				EnabledForTemplateDeployment: pulumi.Bool(true),
+				EnablePurgeProtection:        pulumi.Bool(true),
+				Sku: &keyvault.SkuArgs{
+					Family: pulumi.String("A"),
+					Name:   keyvault.SkuNameStandard,
+				},
+				TenantId: pulumi.String(cConf.TenantId),
+			},
+			ResourceGroupName: rg.Name,
+			VaultName:         pulumi.String("pulumi-kv-nv"),
+		})
+		if err != nil {
+			return err
+		}
+
+		// create key
+		k, err := keyvault.NewKey(ctx, "pulumi-key-name-01", &keyvault.KeyArgs{
+			KeyName: pulumi.String("pulumi-key-name-01"),
+			Properties: &keyvault.KeyPropertiesArgs{
+				Kty: pulumi.String("RSA"),
+			},
+			ResourceGroupName: rg.Name,
+			VaultName:         kv.Name,
+		})
+		if err != nil {
+			return err
+		}
+
+		// et vault details
+		// ctx.Export("rgName", pulumi.All(rg.Name).ApplyT(
+		// 	func(args []interface{}) (string, error) {
+		// 		rgName := args[0].(string)
+		// 		if err != nil {
+		// 			return "", err
+		// 		}
+
+		// 		return rgName, nil
+		// 	},
+		// ))
+
+		// kvd, err := keyvault.LookupVault(ctx, &keyvault.LookupVaultArgs{
+		// 	ResourceGroupName: rg.Name.ApplyT(func(s string) string {return "https://" + s}).(string),
+		// 	VaultName:         pulumi.Sprintf("%s", kv.Name),
+		// })
+		// if err != nil {
+		// 	return err
+		// }
+		// connectionString := pulumi.All(rg.Name, kv.Name).ApplyT(
+		// 	func(args []interface{}) (string, error) {
+		// 		server := args[0].(string)
+		// 		db := args[1].(string)
+		// 		return fmt.Sprintf("Server=tcp:%s.database.windows.net;initial catalog=%s...", server, db), nil
+		// 	},
+		// )
+		// fmt.Printf("%v\n", connectionString)
+
 		// add delegations to databricks
 
 		// create databricks workspace
@@ -185,12 +307,27 @@ func main() {
 				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
 					Value: pulumi.String("public-subnet"),
 				},
-				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameter{
-					Value: true,
+				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
+				},
+				Encryption: &databricks.WorkspaceEncryptionParameterArgs{
+					Value: &databricks.EncryptionArgs{
+						KeyName:     k.Name,
+						KeySource:   pulumi.String("Microsoft.Keyvault"),
+						KeyVaultUri: pulumi.String("Microsoft.Keyvault"),
+						KeyVersion:  k.KeyUriWithVersion,
+					},
+				},
+				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
 				},
 			},
 			ResourceGroupName: rg.Name,
 			WorkspaceName:     pulumi.String("pulumi-dbrws"),
+			Sku: &databricks.SkuArgs{
+				Name: pulumi.String("Premium"),
+				Tier: pulumi.String("Premium"),
+			},
 		})
 		if err != nil {
 			return err
@@ -200,6 +337,7 @@ func main() {
 		fmt.Println(sg.ID())
 		fmt.Println(vn.ID())
 		fmt.Println(dbrws.Name.ToStringOutput())
+		fmt.Println(k.ID())
 
 		return nil
 	})
