@@ -9,9 +9,8 @@ import (
 )
 
 func main() {
-	resp, err := http.Get("http://bulk.openweathermap.org1/sample/city.list.json.gz")
+	resp, err := http.Get("http://bulk.openweathermap.org/sample/city.list.json.gz")
 	if err != nil {
-		// log.Fatal(err)
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
@@ -31,8 +30,6 @@ func main() {
 	body, err = io.ReadAll(reader)
 	reader.Close()
 
-	// out := string(body)
-	// fmt.Print(out[1 : len(out)-1])
 	fmt.Print(string(body))
 
 }
