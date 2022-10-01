@@ -12,7 +12,6 @@ import (
 type Body struct {
 	// json tag to de-serialize json body
 	Name string `json:"name"`
-	ID   int16  `json:"id"`
 }
 
 func respond(c *gin.Context) {
@@ -20,7 +19,6 @@ func respond(c *gin.Context) {
 	body := Body{}
 	// using BindJson method to serialize body with struct
 	if err := c.BindJSON(&body); err != nil {
-		fmt.Println("Error: c.BindJSON()")
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -29,9 +27,7 @@ func respond(c *gin.Context) {
 
 	stdout, err := cmd.Output()
 	if err != nil {
-		fmt.Println("Error: cmd.Output()")
-		fmt.Println("Error:", string(stdout))
-		fmt.Println(err.Error())
+		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 	// return the body as a response to call
