@@ -40,6 +40,6 @@ func respond(c *gin.Context) {
 
 func main() {
 	engine := gin.Default()
-	engine.POST("/test", respond)
+	engine.POST("/api", respond)
 	engine.Run(":3000")
 }
