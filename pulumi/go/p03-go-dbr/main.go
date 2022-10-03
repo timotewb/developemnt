@@ -64,6 +64,7 @@ func main() {
 		// }
 		// manually create security groups 'sgdbr_template.json'
 
+		fmt.Println("NOTE: Creating security group using Classic.")
 		sg, err := network.NewNetworkSecurityGroup(ctx, "pulumi-sg", &network.NetworkSecurityGroupArgs{
 			Location:          pulumi.String(location),
 			ResourceGroupName: rg.Name,
@@ -152,6 +153,7 @@ func main() {
 		}
 
 		// Create virtual network
+		fmt.Println("NOTE: Creating virtual network.")
 		vn, err := network.NewVirtualNetwork(ctx, "pulumi-vn", &network.VirtualNetworkArgs{
 			Location:          pulumi.String(location),
 			ResourceGroupName: rg.Name,
@@ -180,8 +182,9 @@ func main() {
 			return err
 		}
 
-		// create keyvaule
-		kv, err := keyvault.NewVault(ctx, "pulumi-kv-n1", &keyvault.VaultArgs{
+		// create keyvault
+		fmt.Println("NOTE: Creating keyvault.")
+		kv, err := keyvault.NewVault(ctx, "pulumi-kv-n3", &keyvault.VaultArgs{
 			Location: pulumi.String(location),
 			Properties: &keyvault.VaultPropertiesArgs{
 				AccessPolicies: keyvault.AccessPolicyEntryArray{
@@ -247,16 +250,16 @@ func main() {
 				TenantId: pulumi.String(cConf.TenantId),
 			},
 			ResourceGroupName: rg.Name,
-			VaultName:         pulumi.String("pulumi-kv-n1"),
+			VaultName:         pulumi.String("pulumi-kv-n3"),
 		})
 		if err != nil {
 			return err
 		}
 
 		// create key
-		fmt.Println("NOTE:")
-		k, err := keyvault.NewKey(ctx, "pulumi-k1", &keyvault.KeyArgs{
-			KeyName: pulumi.String("pulumi-k1"),
+		fmt.Println("NOTE: Creating key.")
+		k, err := keyvault.NewKey(ctx, "pulumi-k3", &keyvault.KeyArgs{
+			KeyName: pulumi.String("pulumi-k3"),
 			Properties: &keyvault.KeyPropertiesArgs{
 				Kty: pulumi.String("RSA"),
 			},
@@ -270,6 +273,7 @@ func main() {
 		// add delegations to databricks on subnets
 
 		// create databricks workspace
+		fmt.Println("NOTE: Creating Databricks workspace.")
 		dbrws, err := databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
 			Location: pulumi.String(location),
 			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
@@ -287,18 +291,45 @@ func main() {
 				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
 					Value: pulumi.Bool(true),
 				},
-				Encryption: &databricks.WorkspaceEncryptionParameterArgs{
-					Value: &databricks.EncryptionArgs{
-						KeyName:   k.Name,
-						KeySource: pulumi.String("Microsoft.Keyvault"),
-						// KeyVaultUri: kv.Properties.VaultUri(),https://pulumi-kv-n1.vault.azure.net/
-						KeyVaultUri: pulumi.String("https://pulumi-kv-n1.vault.azure.net/"),
-						KeyVersion:  k.KeyUriWithVersion,
-					},
+				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
+				},
+			},
+			ResourceGroupName: rg.Name,
+			WorkspaceName:     pulumi.String("pulumi-dbrws"),
+			Sku: &databricks.SkuArgs{
+				Name: pulumi.String("Premium"),
+				Tier: pulumi.String("Premium"),
+			},
+		})
+		if err != nil {
+			return err
+		}
+		fmt.Println("NOTE: Updating Databricks workspace.")
+		dbrws2, err := databricks.NewWorkspace(ctx, "pulumi-dbrws2", &databricks.WorkspaceArgs{
+			Location: pulumi.String(location),
+			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+			Parameters: &databricks.WorkspaceCustomParametersArgs{
+				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: vn.ID(),
+				},
+				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("private-subnet"),
+				},
+				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("public-subnet"),
+				},
+				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
 				},
 				// Encryption: &databricks.WorkspaceEncryptionParameterArgs{
 				// 	Value: &databricks.EncryptionArgs{
-				// 		KeySource: pulumi.String("Default"),
+				// 		KeyName:   k.Name,
+				// 		KeySource: pulumi.String("Microsoft.Keyvault"),
+				// 		// KeyVaultUri: kv.Properties.VaultUri(),https://pulumi-kv-n1.vault.azure.net/
+				// 		KeyVaultUri: pulumi.String("https://pulumi-kv-n1.vault.azure.net/"),
+				// 		KeyVersion:  k.KeyUriWithVersion,
 				// 	},
 				// },
 				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
@@ -315,7 +346,8 @@ func main() {
 				"applicaiton":            pulumi.String("databricks"),
 				"databricks-environment": pulumi.String("true"),
 			},
-		})
+		}, pulumi.Import(dbrws.ID()),
+			pulumi.DependsOn([]pulumi.Resource{dbrws}))
 		if err != nil {
 			return err
 		}
@@ -324,6 +356,7 @@ func main() {
 		fmt.Println("sg:", sg.ID())
 		fmt.Println("vn:", vn.ID())
 		fmt.Println("dbrws:", dbrws.Name.ToStringOutput())
+		fmt.Println("dbrws2:", dbrws2.Name.ToStringOutput())
 		fmt.Println("k:", k.ID())
 
 		return nil
