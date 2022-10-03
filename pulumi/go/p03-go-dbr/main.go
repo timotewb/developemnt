@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	authorization "github.com/pulumi/pulumi-azure-native/sdk/go/azure/authorization"
-	// databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
+	databricks "github.com/pulumi/pulumi-azure-native/sdk/go/azure/databricks"
 	keyvault "github.com/pulumi/pulumi-azure-native/sdk/go/azure/keyvault"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure/sdk/v5/go/azure/network"
@@ -270,50 +270,60 @@ func main() {
 		// add delegations to databricks on subnets
 
 		// create databricks workspace
-		// dbrws, err := databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
-		// 	Location: pulumi.String(location),
-		// 	// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
-		// 	ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
-		// 	Parameters: &databricks.WorkspaceCustomParametersArgs{
-		// 		CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: vn.ID(),
-		// 		},
-		// 		CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: pulumi.String("private-subnet"),
-		// 		},
-		// 		CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-		// 			Value: pulumi.String("public-subnet"),
-		// 		},
-		// 		RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-		// 			Value: pulumi.Bool(true),
-		// 		},
-		// 		Encryption: &databricks.WorkspaceEncryptionParameterArgs{
-		// 			Value: &databricks.EncryptionArgs{
-		// 				KeyName:     k.Name,
-		// 				KeySource:   pulumi.String("Microsoft.Keyvault"),
-		// 				KeyVaultUri: kv.Properties.VaultUri(),
-		// 				KeyVersion:  k.KeyUriWithVersion,
-		// 			},
-		// 		},
-		// 		PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-		// 			Value: pulumi.Bool(true),
-		// 		},
-		// 	},
-		// 	ResourceGroupName: rg.Name,
-		// 	WorkspaceName:     pulumi.String("pulumi-dbrws"),
-		// 	Sku: &databricks.SkuArgs{
-		// 		Name: pulumi.String("Premium"),
-		// 		Tier: pulumi.String("Premium"),
-		// 	},
-		// })
-		// if err != nil {
-		// 	return err
-		// }
+		dbrws, err := databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
+			Location: pulumi.String(location),
+			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+			Parameters: &databricks.WorkspaceCustomParametersArgs{
+				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: vn.ID(),
+				},
+				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("private-subnet"),
+				},
+				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+					Value: pulumi.String("public-subnet"),
+				},
+				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
+				},
+				Encryption: &databricks.WorkspaceEncryptionParameterArgs{
+					Value: &databricks.EncryptionArgs{
+						KeyName:   k.Name,
+						KeySource: pulumi.String("Microsoft.Keyvault"),
+						// KeyVaultUri: kv.Properties.VaultUri(),https://pulumi-kv-n1.vault.azure.net/
+						KeyVaultUri: pulumi.String("https://pulumi-kv-n1.vault.azure.net/"),
+						KeyVersion:  k.KeyUriWithVersion,
+					},
+				},
+				// Encryption: &databricks.WorkspaceEncryptionParameterArgs{
+				// 	Value: &databricks.EncryptionArgs{
+				// 		KeySource: pulumi.String("Default"),
+				// 	},
+				// },
+				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+					Value: pulumi.Bool(true),
+				},
+			},
+			ResourceGroupName: rg.Name,
+			WorkspaceName:     pulumi.String("pulumi-dbrws"),
+			Sku: &databricks.SkuArgs{
+				Name: pulumi.String("Premium"),
+				Tier: pulumi.String("Premium"),
+			},
+			Tags: pulumi.StringMap{
+				"applicaiton":            pulumi.String("databricks"),
+				"databricks-environment": pulumi.String("true"),
+			},
+		})
+		if err != nil {
+			return err
+		}
 
 		fmt.Println("ra:", ra.Name.ToStringOutput())
 		fmt.Println("sg:", sg.ID())
 		fmt.Println("vn:", vn.ID())
-		// fmt.Println("dbrws:", dbrws.Name.ToStringOutput())
+		fmt.Println("dbrws:", dbrws.Name.ToStringOutput())
 		fmt.Println("k:", k.ID())
 
 		return nil
