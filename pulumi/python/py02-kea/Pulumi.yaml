@@ -1,0 +1,6 @@
+name: py02-kea
+description: A minimal Azure Native Python Pulumi program
+runtime:
+    name: python
+    options:
+        virtualenv: venv
