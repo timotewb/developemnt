@@ -30,6 +30,7 @@ func main() {
 	body, err = io.ReadAll(reader)
 	reader.Close()
 
+	// return to calling api job
 	fmt.Print(string(body))
 
 }
