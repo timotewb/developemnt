@@ -1,3 +1,3 @@
-module github.com/timotewb/openweathermap-currentweather_map
+module github.com/timotewb/openweathermap-current_weather
 
 go 1.19

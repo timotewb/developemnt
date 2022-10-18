@@ -8,6 +8,8 @@ import (
 
 func main() {
 
+	fmt.Println(os.Args[1:])
+
 	f, err := os.Create("/home/timotewb/development/go/1.19/api/app01.txt")
 
 	if err != nil {

@@ -1,9 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os/exec"
 	"path/filepath"
@@ -16,17 +13,7 @@ type Body struct {
 	Name string `json:"name"`
 }
 
-type Config struct {
-	Root_Dir      string `json: "root_dir"`
-	SurrealDB_URL int    `json: "surrealdb_url"`
-}
-
 func respond(c *gin.Context) {
-
-	file, _ := ioutil.ReadFile("api.config")
-	Data := Config{}
-	_ = json.Unmarshal([]byte(file), &Data)
-	fmt.Println(Data)
 
 	body := Body{}
 	// using BindJson method to serialize body with struct
@@ -35,7 +22,8 @@ func respond(c *gin.Context) {
 		return
 	}
 	//cmd := exec.Command(filepath.Join("/mnt/ns01/servers/factotum/01/api/apps", body.Name))
-	cmd := exec.Command(filepath.Join("apps", body.Name))
+	args := []string{"localhost:8000/api"}
+	cmd := exec.Command(filepath.Join("apps", body.Name), args...)
 	stdout, err := cmd.Output()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"Error": err, "Note": "Job not found"})
