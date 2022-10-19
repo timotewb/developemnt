@@ -10,7 +10,8 @@ import (
 
 type Body struct {
 	// json tag to de-serialize json body
-	Name string `json:"name"`
+	Name string   `json:"name"`
+	Args []string `json:"args"`
 }
 
 func respond(c *gin.Context) {
@@ -21,9 +22,8 @@ func respond(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "Note": "Please check you have provided the job name in the correct format {Name:Job Name}."})
 		return
 	}
-	//cmd := exec.Command(filepath.Join("/mnt/ns01/servers/factotum/01/api/apps", body.Name))
-	args := []string{"localhost:8000/api"}
-	cmd := exec.Command(filepath.Join("apps", body.Name), args...)
+	//cmd := exec.Command(filepath.Join("/mnt/ns01/servers/factotum/01/api/apps", body.Name), body.Args...)
+	cmd := exec.Command(filepath.Join("apps", body.Name), body.Args...)
 	stdout, err := cmd.Output()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"Error": err, "Note": "Job not found"})
