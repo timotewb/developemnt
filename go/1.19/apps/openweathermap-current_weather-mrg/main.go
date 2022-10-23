@@ -15,10 +15,11 @@ import (
 var myClient = &http.Client{Timeout: 10 * time.Second}
 var groupSize int = 20
 
-// var api_url string = "http://192.168.144.210:80/api"
-// var sdb_url string = "http://192.168.144.131:8000/sql"
-var api_url string = "http://localhost:3000/api"
-var sdb_url string = "http://localhost:8000/sql"
+var api_url string = "http://192.168.144.210:80/api"
+var sdb_url string = "http://192.168.144.131:8000/sql"
+
+// var api_url string = "http://localhost:3000/api"
+// var sdb_url string = "http://localhost:8000/sql"
 
 type CityList []struct {
 	Time   string `json:"time"`

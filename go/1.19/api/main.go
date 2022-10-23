@@ -22,8 +22,8 @@ func respond(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": err.Error(), "Note": "Please check you have provided the job name in the correct format {Name:Job Name}."})
 		return
 	}
-	//cmd := exec.Command(filepath.Join("/mnt/ns01/servers/factotum/01/api/apps", body.Name), body.Args...)
-	cmd := exec.Command(filepath.Join("apps", body.Name), body.Args...)
+	cmd := exec.Command(filepath.Join("/mnt/ns01/servers/factotum/01/api/apps", body.Name), body.Args...)
+	//cmd := exec.Command(filepath.Join("apps", body.Name), body.Args...)
 	stdout, err := cmd.Output()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"Error": err, "Note": "Job not found"})
