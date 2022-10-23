@@ -88,7 +88,6 @@ func main() {
 	// define var types
 	var agr1 string = os.Args[1]
 	var agr2 string = os.Args[2]
-	//fmt.Println("https://api.openweathermap.org/data/2.5/group?id=" + agr2 + "&appid=" + agr1)
 
 	// make call to api
 	resp, err := http.Get("https://api.openweathermap.org/data/2.5/group?id=" + agr2 + "&appid=" + agr1)
@@ -116,7 +115,7 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			fmt.Print(string(b)) // TODO find a way to lower case json key names
+			fmt.Print(string(b))
 		}
 	}
 
