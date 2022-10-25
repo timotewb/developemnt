@@ -3,6 +3,10 @@ env GOOS=linux GOARCH=arm GOARM=5 go build -o /mnt/ns01/servers/factotum/01/api/
 env GOOS=linux GOARCH=arm GOARM=5 go build -o /mnt/ns01/servers/factotum/01/api/
 
 
+testing
+go build -o ~/development/go/1.19/api/apps
+
+
 package main
 
 import (
