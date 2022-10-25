@@ -1,5 +1,13 @@
 package main
 
+
+//----------------------------------------------------------------------------------------
+// pre-flight checks
+//----------------------------------------------------------------------------------------
+// update runSFX value to prevent existing key error
+// if this is the first time you are running the script check runStep is set to 1
+// if you are running pulumi destroy runStep must be 2 or 3, if you have created dbrws
+
 import (
 	"fmt"
 
@@ -13,43 +21,80 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
+// define struct for config file
+type ConfProjControl struct{
+	RunStep int
+	RunSFX string
+}
+type ConfProjShared struct{
+	Location string
+}
+type ConfProjNetwork struct{
+	VirtualNetworkName string
+	AddressSpacesIP string
+	PublicSubnetName string
+	PublicSubnetIP string
+	PrivateSubnetName string
+	PrivateSubnetIP string
+}
+
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
+		//----------------------------------------------------------------------------------------
+		// read in yaml file
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Reading Pulumi.dev.yaml config file.")
 		conf := config.New(ctx, "")
-		location := conf.Require("location")
+		// assign <proj>:control to 'control' struct
+		var controlConf ConfProjControl
+		conf.RequireObject("control", &controlConf)
+		// assign <proj>:shared to 'shared' struct
+		var sharedConf ConfProjShared
+		conf.RequireObject("shared", &sharedConf)
+		// assign <proj>:network to 'network' struct
+		var networkConf ConfProjNetwork
+		conf.RequireObject("network", &networkConf)
 
 		// get client config
-		fmt.Println("NOTE: Getting client configuration and storing in 'cConf'.")
+		fmt.Println("NOTE: Getting client configuration and store in 'cConf'.")
 		cConf, err := azuread.GetClientConfig(ctx, nil, nil)
 		if err != nil {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// Create an Azure Resource Group
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating resource group with name 'pulumi-rg'.")
 		rg, err := resources.NewResourceGroup(ctx, "pulumi-rg", &resources.ResourceGroupArgs{
-			Location:          pulumi.String(location),
+			Location:          pulumi.String(sharedConf.Location),
 			ResourceGroupName: pulumi.String("pulumi-rg"),
 		})
 		if err != nil {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// create role assignment on managed identity
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating role assignment for 'Databricks Resource Provider' to 'Owner' role.")
-		ra, err := authorization.NewRoleAssignment(ctx, "pulumi-ra", &authorization.RoleAssignmentArgs{
+		authorization.NewRoleAssignment(ctx, "pulumi-ra", &authorization.RoleAssignmentArgs{
 			PrincipalId:        pulumi.String("64765f4d-06b5-4f56-8cc4-1c068f624992"),                                                                                                       //databricks resource provider objID
 			PrincipalType:      pulumi.String("ServicePrincipal"),                                                                                                                           // type
 			RoleAssignmentName: pulumi.String("5a53e7cc-3e62-4357-a85d-6ac4af0d6c18"),                                                                                                       //midbr clientID
 			RoleDefinitionId:   pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"), //id for owner role form web
 			Scope:              rg.ID().ToStringOutput(),
 		})
-		if err != nil {
-			return err
-		}
 
+
+		
+		//----------------------------------------------------------------------------------------
 		// create security group
+		//----------------------------------------------------------------------------------------
 		// sg, err := network.NewNetworkSecurityGroup(ctx, "pulumi-sg", &network.NetworkSecurityGroupArgs{
 		// 	Location:                 pulumi.String(location),
 		// 	NetworkSecurityGroupName: pulumi.String("pulumi-sg"),
@@ -64,9 +109,14 @@ func main() {
 		// }
 		// manually create security groups 'sgdbr_template.json'
 
+
+
+		//----------------------------------------------------------------------------------------
+		// create security group - using azure classic
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating security group using Classic.")
 		sg, err := network.NewNetworkSecurityGroup(ctx, "pulumi-sg", &network.NetworkSecurityGroupArgs{
-			Location:          pulumi.String(location),
+			Location:          pulumi.String(sharedConf.Location),
 			ResourceGroupName: rg.Name,
 			Name:              pulumi.String("pulumi-sg"),
 			SecurityRules: network.NetworkSecurityGroupSecurityRuleArray{
@@ -152,24 +202,28 @@ func main() {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// Create virtual network
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating virtual network.")
 		vn, err := network.NewVirtualNetwork(ctx, "pulumi-vn", &network.VirtualNetworkArgs{
-			Location:          pulumi.String(location),
+			Location:          pulumi.String(sharedConf.Location),
 			ResourceGroupName: rg.Name,
-			Name:              pulumi.String("pulumi-vn"),
+			Name:              pulumi.String(networkConf.VirtualNetworkName),
 			AddressSpaces: pulumi.StringArray{
-				pulumi.String("10.139.0.0/16"),
+				pulumi.String(networkConf.AddressSpacesIP),
 			},
 			Subnets: network.VirtualNetworkSubnetArray{
 				&network.VirtualNetworkSubnetArgs{
-					Name:          pulumi.String("public-subnet"),
-					AddressPrefix: pulumi.String("10.139.0.0/24"),
+					Name:          pulumi.String(networkConf.PublicSubnetName),
+					AddressPrefix: pulumi.String(networkConf.PublicSubnetIP),
 					SecurityGroup: sg.ID(),
 				},
 				&network.VirtualNetworkSubnetArgs{
-					Name:          pulumi.String("private-subnet"),
-					AddressPrefix: pulumi.String("10.139.1.0/24"),
+					Name:          pulumi.String(networkConf.PrivateSubnetName),
+					AddressPrefix: pulumi.String(networkConf.PrivateSubnetIP),
 					SecurityGroup: sg.ID(),
 				},
 			},
@@ -182,10 +236,14 @@ func main() {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// create keyvault
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating keyvault.")
-		kv, err := keyvault.NewVault(ctx, "pulumi-kv-n3", &keyvault.VaultArgs{
-			Location: pulumi.String(location),
+		kv, err := keyvault.NewVault(ctx, "pulumi-kv", &keyvault.VaultArgs{
+			Location: pulumi.String(sharedConf.Location),
 			Properties: &keyvault.VaultPropertiesArgs{
 				AccessPolicies: keyvault.AccessPolicyEntryArray{
 					&keyvault.AccessPolicyEntryArgs{
@@ -250,16 +308,20 @@ func main() {
 				TenantId: pulumi.String(cConf.TenantId),
 			},
 			ResourceGroupName: rg.Name,
-			VaultName:         pulumi.String("pulumi-kv-n3"),
+			VaultName:         pulumi.String("pulumi-kv"+controlConf.RunSFX),
 		})
 		if err != nil {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// create key
+		//----------------------------------------------------------------------------------------
 		fmt.Println("NOTE: Creating key.")
-		k, err := keyvault.NewKey(ctx, "pulumi-k3", &keyvault.KeyArgs{
-			KeyName: pulumi.String("pulumi-k3"),
+		k, err := keyvault.NewKey(ctx, "pulumi-k", &keyvault.KeyArgs{
+			KeyName: pulumi.String("pulumi-k"+controlConf.RunSFX),
 			Properties: &keyvault.KeyPropertiesArgs{
 				Kty: pulumi.String("RSA"),
 			},
@@ -270,94 +332,91 @@ func main() {
 			return err
 		}
 
+
+
+		//----------------------------------------------------------------------------------------
 		// add delegations to databricks on subnets
+		//----------------------------------------------------------------------------------------
+		// manualy add delegations to subnets since azure.native does not work and azure.classic
+		// cant do it...
+		// once updated change runStep in .yaml file to 2
 
+
+
+		//----------------------------------------------------------------------------------------
 		// create databricks workspace
-		fmt.Println("NOTE: Creating Databricks workspace.")
-		dbrws, err := databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
-			Location: pulumi.String(location),
-			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
-			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
-			Parameters: &databricks.WorkspaceCustomParametersArgs{
-				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: vn.ID(),
+		//----------------------------------------------------------------------------------------
+		if (controlConf.RunStep == 2){
+			fmt.Println("NOTE: Creating Databricks workspace.")
+			databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
+				Location: pulumi.String(sharedConf.Location),
+				// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+				ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+				Parameters: &databricks.WorkspaceCustomParametersArgs{
+					CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: vn.ID(),
+					},
+					CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: pulumi.String(networkConf.PrivateSubnetName),
+					},
+					CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: pulumi.String(networkConf.PublicSubnetName),
+					},
+					RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+						Value: pulumi.Bool(true),
+					},
+					PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+						Value: pulumi.Bool(true),
+					},
 				},
-				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: pulumi.String("private-subnet"),
+				ResourceGroupName: rg.Name,
+				WorkspaceName:     pulumi.String("pulumi-dbrws"),
+				Sku: &databricks.SkuArgs{
+					Name: pulumi.String("Premium"),
+					Tier: pulumi.String("Premium"),
 				},
-				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: pulumi.String("public-subnet"),
+			})
+		} else if (controlConf.RunStep == 3){
+			fmt.Println("NOTE: Updating Databricks workspace with custom keys.")
+			databricks.NewWorkspace(ctx, "pulumi-dbrws", &databricks.WorkspaceArgs{
+				Location: pulumi.String(sharedConf.Location),
+				// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
+				ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
+				Parameters: &databricks.WorkspaceCustomParametersArgs{
+					CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: vn.ID(),
+					},
+					CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: pulumi.String(networkConf.PrivateSubnetName),
+					},
+					CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
+						Value: pulumi.String(networkConf.PublicSubnetName),
+					},
+					RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+						Value: pulumi.Bool(true),
+					},
+					PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
+						Value: pulumi.Bool(true),
+					},
+					Encryption: &databricks.WorkspaceEncryptionParameterArgs{
+						Value: &databricks.EncryptionArgs{
+							KeyName:   k.Name,
+							KeySource: pulumi.String("Microsoft.Keyvault"),
+							KeyVaultUri: kv.Properties.VaultUri(),
+							// KeyVaultUri: pulumi.String("https://pulumi-kv-n1.vault.azure.net/"),
+							KeyVersion:  k.KeyUriWithVersion,
+						},
+					},
 				},
-				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-					Value: pulumi.Bool(true),
+				ResourceGroupName: rg.Name,
+				WorkspaceName:     pulumi.String("pulumi-dbrws"),
+				Sku: &databricks.SkuArgs{
+					Name: pulumi.String("Premium"),
+					Tier: pulumi.String("Premium"),
 				},
-				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-					Value: pulumi.Bool(true),
-				},
-			},
-			ResourceGroupName: rg.Name,
-			WorkspaceName:     pulumi.String("pulumi-dbrws"),
-			Sku: &databricks.SkuArgs{
-				Name: pulumi.String("Premium"),
-				Tier: pulumi.String("Premium"),
-			},
-		})
-		if err != nil {
-			return err
-		}
-		fmt.Println("NOTE: Updating Databricks workspace.")
-		dbrws2, err := databricks.NewWorkspace(ctx, "pulumi-dbrws2", &databricks.WorkspaceArgs{
-			Location: pulumi.String(location),
-			// ManagedResourceGroupId: rgdbr.ID().ToStringOutput(),
-			ManagedResourceGroupId: pulumi.String("/subscriptions/5f3d7f2f-1189-427d-aaa3-5c220e2b3e9a/resourceGroups/pulumi-rgdbr-auto"),
-			Parameters: &databricks.WorkspaceCustomParametersArgs{
-				CustomVirtualNetworkId: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: vn.ID(),
-				},
-				CustomPrivateSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: pulumi.String("private-subnet"),
-				},
-				CustomPublicSubnetName: &databricks.WorkspaceCustomStringParameterArgs{
-					Value: pulumi.String("public-subnet"),
-				},
-				RequireInfrastructureEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-					Value: pulumi.Bool(true),
-				},
-				// Encryption: &databricks.WorkspaceEncryptionParameterArgs{
-				// 	Value: &databricks.EncryptionArgs{
-				// 		KeyName:   k.Name,
-				// 		KeySource: pulumi.String("Microsoft.Keyvault"),
-				// 		// KeyVaultUri: kv.Properties.VaultUri(),https://pulumi-kv-n1.vault.azure.net/
-				// 		KeyVaultUri: pulumi.String("https://pulumi-kv-n1.vault.azure.net/"),
-				// 		KeyVersion:  k.KeyUriWithVersion,
-				// 	},
-				// },
-				PrepareEncryption: &databricks.WorkspaceCustomBooleanParameterArgs{
-					Value: pulumi.Bool(true),
-				},
-			},
-			ResourceGroupName: rg.Name,
-			WorkspaceName:     pulumi.String("pulumi-dbrws"),
-			Sku: &databricks.SkuArgs{
-				Name: pulumi.String("Premium"),
-				Tier: pulumi.String("Premium"),
-			},
-			Tags: pulumi.StringMap{
-				"applicaiton":            pulumi.String("databricks"),
-				"databricks-environment": pulumi.String("true"),
-			},
-		}, pulumi.Import(dbrws.ID()),
-			pulumi.DependsOn([]pulumi.Resource{dbrws}))
-		if err != nil {
-			return err
-		}
+			})
 
-		fmt.Println("ra:", ra.Name.ToStringOutput())
-		fmt.Println("sg:", sg.ID())
-		fmt.Println("vn:", vn.ID())
-		fmt.Println("dbrws:", dbrws.Name.ToStringOutput())
-		fmt.Println("dbrws2:", dbrws2.Name.ToStringOutput())
-		fmt.Println("k:", k.ID())
+		}
 
 		return nil
 	})
