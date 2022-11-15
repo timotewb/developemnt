@@ -1,3 +1,13 @@
 config:
-  azure-native:location: australiaeast
-  p03-go-dbr:location: australiaeast
+  p03-go-dbr:control:
+    runStep: 2
+    runSFX: "004"
+  p03-go-dbr:shared:
+    location: australiaeast
+  p03-go-dbr:network:
+    virtualNetworkName: pulumi-vn
+    addressSpacesIP: 10.139.0.0/16
+    publicSubnetName: public-subnet
+    publicSubnetIP: 10.139.0.0/24
+    privateSubnetName: private-subnet
+    privateSubnetIP: 10.139.1.0/24
