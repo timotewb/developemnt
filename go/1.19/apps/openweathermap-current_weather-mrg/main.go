@@ -33,7 +33,7 @@ func getJson(sdb_url string, target interface{}) {
 	body := []byte("SELECT location_id FROM city_list;")
 
 	r, err := http.NewRequest("POST", sdb_url, bytes.NewBuffer(body))
-	r.SetBasicAuth("root", "root")
+	r.SetBasicAuth("etl", "etl")
 	if err != nil {
 		panic(err)
 	}
@@ -55,12 +55,19 @@ func getJson(sdb_url string, target interface{}) {
 			log.Fatal(err)
 		}
 		if err := json.Unmarshal(bodyBytes, &target); err != nil {
-			fmt.Println("Can not unmarshal JSON")
+			fmt.Println("getJson - Can not unmarshal JSON")
 		}
 	}
 }
 
-func surreadDBCall(sdb_url string, api_url string, ids string) {
+type Body struct {
+	Code        int    `json:"code"`
+	Details     string `json:"details"`
+	Description string `json:"description"`
+	Information string `json:"information"`
+}
+
+func surreadDBCall(sdb_url string, api_url string, ids string, target interface{}) {
 	body := []byte(`insert into current_weather (
 		select 
 			string::join('-',id,dt) as id,
@@ -76,9 +83,8 @@ func surreadDBCall(sdb_url string, api_url string, ids string) {
 				]
 			}
 		));`)
-
 	r, err := http.NewRequest("POST", sdb_url, bytes.NewBuffer(body))
-	r.SetBasicAuth("root", "root")
+	r.SetBasicAuth("etl", "etl")
 	if err != nil {
 		panic(err)
 	}
@@ -93,6 +99,24 @@ func surreadDBCall(sdb_url string, api_url string, ids string) {
 	}
 
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := json.Unmarshal(bodyBytes, &target); err != nil {
+			fmt.Println("surreadDBCall - Can not unmarshal JSON", err)
+			fmt.Println(string(bodyBytes))
+		}
+	} else {
+		var j = []byte(`{"code":200,"details":"success","description":"All OK","information":"All OK"}`)
+		if err := json.Unmarshal(j, &target); err != nil {
+			fmt.Println("surreadDBCall - Can not unmarshal JSON", err)
+			fmt.Println(string(j))
+		}
+	}
+
 }
 
 func main() {
@@ -124,7 +148,17 @@ func main() {
 			// fmt.Println(string(stdout))
 
 			// call SurrealDB to get data
-			surreadDBCall(sdb_url, api_url, s)
+			var b Body
+			surreadDBCall(sdb_url, api_url, s, &b)
+			if b.Code != 200 {
+				b, err := json.Marshal(b)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				fmt.Println(string(b))
+				return
+			}
 			l = 1
 			s = ""
 			var d int = rand.Intn(500)

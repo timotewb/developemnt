@@ -1,4 +1,4 @@
-~/.surrealdb/surreal start --log debug --user root --pass root file:///home/timotewb/db/SurrealDB
+~/.surrealdb/surreal start --log debug --user etl --pass etl file:///home/timotewb/db/SurrealDB
 
 ~/.surrealdb/surreal export --db test --ns test -u root -p root -c http://localhost:8000 ~/development/SurrealDB/export.sql
 ~/.surrealdb/surreal import --db test --ns test -u root -p root -c http://localhost:8000 ~/development/SurrealDB/export.sql
