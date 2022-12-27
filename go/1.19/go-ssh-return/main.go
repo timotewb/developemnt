@@ -24,7 +24,7 @@ func main() {
 		HostKeyCallback: hostKeyCallback,
 	}
 	// connect ot ssh server
-	conn, err := ssh.Dial("tcp", "192.168.144.211:22", config)
+	conn, err := ssh.Dial("tcp", "192.168.144.212:22", config)
 	if err != nil {
 		log.Fatal(err)
 	}
