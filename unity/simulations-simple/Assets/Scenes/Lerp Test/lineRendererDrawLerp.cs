@@ -12,6 +12,10 @@ public class lineRendererDrawLerp : MonoBehaviour
     public float posXEnd = 9.0f;
     public float posYEnd = 6.0f;
     public float posZEnd = 0.0f;
+
+    public float drawSpeed = 0.5f;
+
+    private LineRenderer lr;
     
     // starting value for the Lerp
     static float t = 0.0f;
@@ -19,7 +23,7 @@ public class lineRendererDrawLerp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        LineRenderer lr = gameObject.AddComponent<LineRenderer>();
+        lr = gameObject.GetComponent<LineRenderer>();
         lr.positionCount = 2;
         lr.SetPosition(0, new Vector3(posX,posY,posZ));        
     }
@@ -29,8 +33,9 @@ public class lineRendererDrawLerp : MonoBehaviour
     {
         lr.SetPosition(1, new Vector3(Mathf.Lerp(posX, posXEnd, t),Mathf.Lerp(posY, posYEnd, t),0));
         
-        t += 0.5f * Time.deltaTime;
+        t += drawSpeed * Time.deltaTime;
 
+        // when line is completely drawn, undraw it.
         if (t > 1.0f)
         {
             float temp = posXEnd;
