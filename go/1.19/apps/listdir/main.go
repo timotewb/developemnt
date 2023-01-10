@@ -24,7 +24,7 @@ func main() {
 listdir help
 ----------------------------------------
 
-API to return an array of files in a given directory.
+App to return an array of files in a given directory.
 
 Call this api using the below format in the body:
 {
@@ -57,6 +57,10 @@ Example call to list all filss in directory /tmp/test not recursively:
 
 Example format of data returned:
 ['<file1>','<file2>'...]
+
+Todo:
+- search recursivley
+- filter based on extension
 
 ----------------------------------------
 `)
@@ -97,7 +101,7 @@ func getfilesnonrecursive() {
 	}
 
 	for _, file := range files {
-		if file.IsDir() {
+		if !file.IsDir() {
 			f = append(f, "'"+file.Name()+"'")
 		}
 		// fmt.Println(file.Name(), file.IsDir())
