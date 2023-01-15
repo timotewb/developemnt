@@ -59,24 +59,28 @@ func main() {
 	for _, f := range fileList {
 
 		// create required vars
-		fileNameX := f
-		fileName := fileNameX[:len(fileNameX)-len(filepath.Ext(fileNameX))]
+		fileNameX := strings.TrimSpace(strings.ReplaceAll(f, "'", ""))
+		fileName := strings.TrimSpace(fileNameX[:len(fileNameX)-len(filepath.Ext(fileNameX))])
 		//ffmpeg := `/usr/bin/ffmpeg -i ` + agr1 + ` -c:v dnxhd -vf "scale=3840:2160,fps=30000/1001,format=yuv422p10le" -profile:v dnxhr_hqx -b:v 873M -c:a pcm_s16le ` + filepath.Join(outDir, fileName+`.mov`)
 
 		// convert file if not exist
 		if _, err := os.Stat(filepath.Join(outDir, fileName+`.mov`)); errors.Is(err, os.ErrNotExist) {
 
-			cmd := exec.Command("/usr/bin/ffmpeg", "-i", filepath.Join(outDir, fileNameX), "-c:v", "dnxhd", "-vf", "scale=3840:2160,fps=30000/1001,format=yuv422p10le", "-profile:v", "dnxhr_hqx", "-b:v", "873M", "-c:a", "pcm_s16le", filepath.Join(outDir, fileName+".mov"))
-			var out bytes.Buffer
-			var stderr bytes.Buffer
-			cmd.Stdout = &out
-			cmd.Stderr = &stderr
-			err := cmd.Run()
-			if err != nil {
-				fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-				return
+			if f != "" {
+
+				cmd := exec.Command("/usr/bin/ffmpeg", "-i", filepath.Join(dir, fileNameX), "-c:v", "dnxhd", "-vf", "scale=3840:2160,fps=30000/1001,format=yuv422p10le", "-profile:v", "dnxhr_hqx", "-b:v", "873M", "-c:a", "pcm_s16le", filepath.Join(outDir, fileName+".mov"))
+				var out bytes.Buffer
+				var stderr bytes.Buffer
+				cmd.Stdout = &out
+				cmd.Stderr = &stderr
+				err := cmd.Run()
+				if err != nil {
+					fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+					return
+				}
+				fmt.Println("Result: Conversion complete. " + out.String())
+
 			}
-			fmt.Println("Result: Conversion complete. " + out.String())
 		} else {
 			println("Result: File already exists.")
 		}
