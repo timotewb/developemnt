@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class runSimulation : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class runSimulation : MonoBehaviour
     private float t = 0.0f;
     private bool opening;
     private bool drawComplete;
+    public TMP_Text _dist;
+    private float dist;
     // private LineRenderer lr;
     // public int lengthOfLineRenderer = 20;
     // LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -56,7 +59,9 @@ public class runSimulation : MonoBehaviour
                 yield return new WaitForEndOfFrame();
                 t += drawSpeed * Time.deltaTime;
             }
+            dist = dist+Vector3.Distance(pointObjects[i - 1].transform.position, pointObjects[i].transform.position);
         }
+        _dist.text = dist.ToString("F2")+"km";
         opening = false;
     }
 }
