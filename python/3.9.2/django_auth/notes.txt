@@ -1,0 +1,6 @@
+python -m pip install -r requirments.txt
+
+django-admin startproject django_project .
+
+python manage.py migrate
+python manage.py runserver
