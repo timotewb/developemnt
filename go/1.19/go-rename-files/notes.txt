@@ -1,0 +1,6 @@
+sudo apt -y update
+sudo apt -y upgrade
+sudo apt -y install zenity
+
+
+// env GOOS=windows GOARCH=amd64 go build .
