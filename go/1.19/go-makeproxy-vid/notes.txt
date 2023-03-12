@@ -1,0 +1,11 @@
+ffmpeg -i dnxhr444.mov -c:v dnxhd -vf "scale=1280:720,fps=24000/1001,format=yuv422p" -profile:v libx264  -c:a pcm_s16le -ar 48000 -hide_banner testfile.mp4
+
+
+ffmpeg -i dnxhr444.mov -c:v dnxhd -vf "scale=1280:720,fps=24000/1001,format=yuv422p" -vcodec libx264 -acodec aac output.mp4
+
+
+
+
+
+# this one!
+ffmpeg -i dnxhr444.mov -vf "scale=1280:720,fps=24000/1001,format=yuv422p" -vcodec libx264 -pix_fmt yuv420p -profile:v baseline -level 3 output.mp4
