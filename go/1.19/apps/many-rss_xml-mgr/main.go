@@ -54,7 +54,7 @@ func surreadDBCall(sdb_url string, api_url string, url string) {
 
 func main() {
 
-	readFile, err := os.Open("urls.txt")
+	readFile, err := os.Open("/mnt/ns01/servers/factotum/01/api/apps/urls.txt")
 
 	if err != nil {
 		fmt.Println(err)

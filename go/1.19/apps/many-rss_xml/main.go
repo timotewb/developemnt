@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-var deBug bool = false
+var deBug bool = true
 
 // var getURL string = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
 // var getURL string = "https://www.rnz.co.nz/rss/business.xml"
@@ -100,6 +100,8 @@ func main() {
 					fmt.Printf("PubDate:     %v\n", s.PubDate)
 					fmt.Printf("ImageURL:    %v\n", s.ImageURL)
 					fmt.Printf("ImageCredit: %v\n", s.ImageCredit)
+					fmt.Println()
+					fmt.Println("--------------------")
 					fmt.Println()
 				}
 			}
