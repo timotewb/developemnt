@@ -64,7 +64,7 @@ func main() {
 	fileScanner.Split(bufio.ScanLines)
 
 	for fileScanner.Scan() {
-		//fmt.Println(fileScanner.Text())
+		fmt.Println(fileScanner.Text())
 		if fileScanner.Text() != "" {
 			surreadDBCall(sdb_url, api_url, fileScanner.Text())
 			var d int = rand.Intn(500)
