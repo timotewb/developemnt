@@ -155,70 +155,70 @@ Memory consumption went from 109.9 MB to 109.9 MB.
 Total: 1.707000 ms (FindLiveObjects: 0.133800 ms CreateObjectMapping: 0.037800 ms MarkObjects: 1.485900 ms  DeleteObjects: 0.048700 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc ->
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b ->
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 ->
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 ->
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 ->
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 ->
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 ->
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 ->
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
 ========================================================================
 Received Import Request.
   Time since last request: 49436.784056 seconds.
   path: Assets/Scenes/Closest Point/Closest Point.unity
   artifactKey: Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Closest Point.unity using Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '48e0a29ebed9c7a927a9a7f88b80124e') in 0.007077 seconds 
+Start importing Assets/Scenes/Closest Point/Closest Point.unity using Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '48e0a29ebed9c7a927a9a7f88b80124e') in 0.007077 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 241.074671 seconds.
   path: Assets/Scenes/Closest Point/Sphere.prefab
   artifactKey: Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a49215f13202fbcb442b27f05073e3c2') in 0.063538 seconds 
+Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a49215f13202fbcb442b27f05073e3c2') in 0.063538 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 152.512613 seconds.
   path: Assets/Scenes/Closest Point/Sphere.prefab
   artifactKey: Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b8f066716eef92bc16f2aefbaeeebf15') in 0.008035 seconds 
+Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b8f066716eef92bc16f2aefbaeeebf15') in 0.008035 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 2.204462 seconds.
   path: Assets/Scenes/Closest Point/Sphere.prefab
   artifactKey: Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb9eccf560450420c2d1c68d2b682754') in 0.006249 seconds 
+Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bb9eccf560450420c2d1c68d2b682754') in 0.006249 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 6.049689 seconds.
   path: Assets/Scenes/Closest Point/Sphere.prefab
   artifactKey: Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '94fdfe70d390fccd00b14e45ca93cc53') in 0.005031 seconds 
+Start importing Assets/Scenes/Closest Point/Sphere.prefab using Guid(d134a42c69f9e5c4c873d47fb9d926bd) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '94fdfe70d390fccd00b14e45ca93cc53') in 0.005031 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 10.605250 seconds.
   path: Assets/Scenes/Drop Point/dropPoint.cs
   artifactKey: Guid(f86508e9c0878974183ed7f653965b6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Drop Point/dropPoint.cs using Guid(f86508e9c0878974183ed7f653965b6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7124d4fb253ea0c581a6020e64f1c20d') in 0.013622 seconds 
+Start importing Assets/Scenes/Drop Point/dropPoint.cs using Guid(f86508e9c0878974183ed7f653965b6c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7124d4fb253ea0c581a6020e64f1c20d') in 0.013622 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 119.485127 seconds.
   path: Assets/Scenes/Closest Point/dropPoint.cs
   artifactKey: Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/dropPoint.cs using Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1e5d4279ee8d634c528faeb07b9cb920') in 0.001214 seconds 
+Start importing Assets/Scenes/Closest Point/dropPoint.cs using Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1e5d4279ee8d634c528faeb07b9cb920') in 0.001214 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 36.701944 seconds.
   path: Assets/Scenes/Closest Point/Closest Point.unity
   artifactKey: Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/Closest Point.unity using Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f2aa79d26c1339cf62a51715378ce78e') in 0.001840 seconds 
+Start importing Assets/Scenes/Closest Point/Closest Point.unity using Guid(0bb4116cea802c8488e6b0eb9de022fc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f2aa79d26c1339cf62a51715378ce78e') in 0.001840 seconds
 ========================================================================
 Received Import Request.
   Time since last request: 29.296569 seconds.
   path: Assets/Scenes/Closest Point/dropPoint01.cs
   artifactKey: Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/Closest Point/dropPoint01.cs using Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '28cab6f1ed6ddbc5949a7c189adba826') in 0.004632 seconds 
+Start importing Assets/Scenes/Closest Point/dropPoint01.cs using Guid(d6926e70c5ea8b54487356d9b5d8ad7e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '28cab6f1ed6ddbc5949a7c189adba826') in 0.004632 seconds
 ========================================================================
 Received Prepare
 Registering precompiled user dll's ...
@@ -267,16 +267,16 @@ Memory consumption went from 112.7 MB to 112.6 MB.
 Total: 1.582300 ms (FindLiveObjects: 0.128200 ms CreateObjectMapping: 0.034800 ms MarkObjects: 1.406100 ms  DeleteObjects: 0.012700 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc ->
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b ->
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 ->
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 ->
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 ->
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 ->
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 ->
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 ->
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
 ========================================================================
 Received Prepare
 Registering precompiled user dll's ...
@@ -325,16 +325,16 @@ Memory consumption went from 112.7 MB to 112.6 MB.
 Total: 1.705400 ms (FindLiveObjects: 0.123500 ms CreateObjectMapping: 0.037800 ms MarkObjects: 1.527100 ms  DeleteObjects: 0.016400 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc ->
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b ->
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 ->
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 ->
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 ->
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 ->
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 ->
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 ->
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
 ========================================================================
 Received Prepare
 Registering precompiled user dll's ...
@@ -383,16 +383,16 @@ Memory consumption went from 112.7 MB to 112.7 MB.
 Total: 1.630700 ms (FindLiveObjects: 0.121900 ms CreateObjectMapping: 0.036200 ms MarkObjects: 1.456500 ms  DeleteObjects: 0.015400 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc ->
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b ->
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 ->
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 ->
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 ->
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 ->
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 ->
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 ->
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
 ========================================================================
 Received Prepare
 Registering precompiled user dll's ...
@@ -441,13 +441,13 @@ Memory consumption went from 112.7 MB to 112.7 MB.
 Total: 1.697500 ms (FindLiveObjects: 0.131100 ms CreateObjectMapping: 0.043800 ms MarkObjects: 1.508400 ms  DeleteObjects: 0.013300 ms)
 
 AssetImportParameters requested are different than current active one (requested -> active):
-  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
-  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
-  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
-  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
-  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 -> 
-  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
-  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
-  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
-  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
-  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc ->
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b ->
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 ->
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 ->
+  custom:video-codec-MediaFoundation-h265: 746d11721c4dcdbdad8f713fa42b33f4 ->
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 ->
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 ->
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 ->
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 ->
