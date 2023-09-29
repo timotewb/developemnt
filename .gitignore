@@ -93,3 +93,4 @@ About
 \Library\Artifacts\
 
 venv/
+.env/

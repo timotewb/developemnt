@@ -1,0 +1,10 @@
+https://www.youtube.com/watch?v=SqcY0GlETPk&t=328s
+
+npm create vite@4.1.0
+
+Use below to see how html is converted into JavaScript
+bablejs.io
+
+npm i bootstrap@5.2.3
+
+50:48
