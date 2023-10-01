@@ -1,0 +1,57 @@
+{
+  "inputs": [
+    {
+      "id": 1,
+      "name": "Resource",
+      "attributes": [
+        { "id": 1, "value": 10.0, "description": "initial resource count" },
+        {
+          "id": 2,
+          "value": 0.8,
+          "description": "max utilisation per resource"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Engagements",
+      "attributes": [
+        { "id": 1, "value": 5.0, "description": "initial engagement count" },
+        {
+          "id": 2,
+          "value": 2.5,
+          "description": "resource per engagement"
+        },
+        {
+          "id": 3,
+          "value": 100.0,
+          "description": "average engagement value"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "id": 1,
+      "name": "Work Completed",
+      "items": [
+        { "id": 1, "item_id": 2, "link_type": "attribute", "value_id": 2 },
+        { "id": 3, "item_id": 1, "link_type": "attribute", "value_id": 1 },
+        { "id": 4, "item_id": 1, "link_type": "attribute", "value_id": 2 }
+      ],
+      "equation": "(3*4)/1",
+      "output": null
+    },
+    {
+      "id": 2,
+      "name": "Work Completed2",
+      "items": [
+        { "id": 1, "item_id": 2, "link_type": "attribute", "value_id": 2 },
+        { "id": 3, "item_id": 1, "link_type": "attribute", "value_id": 1 },
+        { "id": 4, "item_id": 1, "link_type": "attribute", "value_id": 2 }
+      ],
+      "equation": "(3*4)/1",
+      "output": null
+    }
+  ]
+}

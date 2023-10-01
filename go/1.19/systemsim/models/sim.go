@@ -5,4 +5,5 @@ package models
 //----------------------------------------------------------------------------------------
 type SimType struct{
 	Inputs []InputType `json:"inputs"`
+	Link []LinkType `json:"links"`
 }
