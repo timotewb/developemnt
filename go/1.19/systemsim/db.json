@@ -39,12 +39,12 @@
         { "id": 3, "item_id": 1, "link_type": "attribute", "value_id": 1 },
         { "id": 4, "item_id": 1, "link_type": "attribute", "value_id": 2 }
       ],
-      "equation": "(3*4)/1",
+      "equation": "(|3|*|4|)/|1|",
       "output": null
     },
     {
       "id": 2,
-      "name": "Work Completed2",
+      "name": "Revenue Earned",
       "items": [
         { "id": 1, "item_id": 2, "link_type": "attribute", "value_id": 2 },
         { "id": 3, "item_id": 1, "link_type": "attribute", "value_id": 1 },

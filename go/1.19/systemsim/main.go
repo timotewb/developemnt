@@ -27,4 +27,5 @@ func main(){
     fmt.Printf("%s\n", string(dataJSON))
 }
 
-// add | around ids in equation
+
+// work through Revenue Earned link (link between Input and Link)

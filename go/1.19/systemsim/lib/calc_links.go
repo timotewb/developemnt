@@ -17,9 +17,9 @@ func CalcLinks(s m.SimType){
 
 		// create executable equation
 		e = s.Link[i].Equation
-		// for each item go find it and replace id in the equation with value
+		// for each item go find it and replace the id in the equation with value
 		for j = 0; j <len(s.Link[i].Items); j++{
-			e = strings.Replace(e, strconv.Itoa(s.Link[i].Items[j].ID), strconv.FormatFloat(getInputAttributeValue(s, s.Link[i].Items[j].ItemID, s.Link[i].Items[j].ValueID), 'g', 5, 64), 1)
+			e = strings.Replace(e, "|"+strconv.Itoa(s.Link[i].Items[j].ID)+"|", strconv.FormatFloat(getInputAttributeValue(s, s.Link[i].Items[j].ItemID, s.Link[i].Items[j].ValueID), 'g', 5, 64), 1)
 		}
 		s.Link[i].EquationEvaluated = e
 
